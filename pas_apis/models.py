@@ -13,8 +13,9 @@ from datetime import date
 class StudentUser(User):
     RollNo = models.CharField(max_length=10)
 
-class StudentProfile(StudentUser):
+class StudentProfile(models.Model):
     """Model that gives that stores the studnt profile. It also has fields inherited from StudentUser"""
+    StudUser = models.OneToOneField(StudentUser, on_delete = models.CASCADE, primary_key=True)
     FirstName = models.CharField(max_length=100, blank=True)
     LastName = models.CharField(max_length=100, blank=True)
     MiddleName = models.CharField(max_length=100, blank=True)
@@ -24,8 +25,7 @@ class StudentProfile(StudentUser):
     PostGrad = models.BooleanField(default=False)# shows whether the profile has postgrad details.
 
 class XBoard(models.Model):
-    """Model that contains the Board info of a student and is related to the StudentProfile by ForeignKey. Could be implemented by inheritance also( One - One relation) with StudentProfile."""
-    Profile = models.ForeignKey(StudentProfile)
+    Profile = models.OneToOneField(StudentProfile, on_delete = models.CASCADE, primary_key=True)
     Date = models.DateField(blank=True)
     Marks = models.IntegerField()
     Board = models.CharField(max_length=100)
@@ -36,8 +36,8 @@ class XBoard(models.Model):
         return XBoard
 
 class XIIBoard(models.Model):
-    """Model that contains the Board info of a student and is related to the StudentProfile by ForeignKey. Could be implemented by inheritance also( One - One relation) with StudentProfile."""
-    Profile = models.ForeignKey(StudentProfile)
+    """Model containing XII Board Details, having OneToOne relation with StudentProfile"""
+    Profile = models.OneToOneField(StudentProfile, on_delete = models.CASCADE, primary_key=True)
     Marks = models.IntegerField()
     Board = models.CharField(max_length=100)
     Date = models.DateField(blank=True)
@@ -49,8 +49,8 @@ class XIIBoard(models.Model):
         return XIIBoard
 
 class StudentUnderGrad(models.Model):
-    """Model that contains the UnderGrad info of a student and is related to the StudentProfile by ForeignKey. Could be implemented by inheritance also( One - One relation) with StudentProfile."""
-    Profile = models.ForeignKey(StudentProfile)
+    """Model containing UnderGrad Details, having OneToOne relation with StudentProfile"""
+    Profile = models.OneToOneField(StudentProfile, on_delete = models.CASCADE, primary_key=True)
     Cpi = models.FloatField()
     ParentBranch = models.CharField(max_length=100)
     Institute = models.CharField(max_length=100)
@@ -70,8 +70,8 @@ class DualDegree(StudentUnderGrad):
      SecBranch = models.CharField(max_length=100)
 
 class StudentPostGrad(models.Model):
-     """Model that contains the PostGrad info of a student and is related to the StudentProfile by ForeignKey. Could be implemented by inheritance also( One - One relation) with StudentProfile."""
-    Profile = models.ForeignKey(StudentProfile)
+    """Model containing PostGrad Details, having OneToOne relation with StudentProfile"""
+    Profile = models.OneToOneField(StudentProfile, on_delete = models.CASCADE, primary_key=True)
     Cpi = models.FloatField()
     ParentBranch = models.CharField(max_length=100)
     Institute = models.CharField(max_length=100)
@@ -83,8 +83,8 @@ class StudentPostGrad(models.Model):
         return postgrad
 
 class StudentExp(models.Model):
-     """Model that contains the Experience of a student and is related to the StudentProfile by ForeignKey. Contains IntegerFields which store the count experience related model objects to a particular StudentProfile. Could be implemented by inheritance also( One - One relation) with StudentProfile."""
-    Profile = models.ForeignKey(StudentProfile)
+    """Model containing Experience Details, having OneToOne relation with StudentProfile"""
+    Profile = models.OneToOneField(StudentProfile, on_delete = models.CASCADE, primary_key=True)
     Intern = models.IntegerField(default=0)
     POR = models.IntegerField(default=0)
     Training = models.IntegerField(default=0)
@@ -100,14 +100,14 @@ class StudentIntern(models.Model):
     Description = models.TextField()
 
 class StudentPOR(models.Model):
-     """Model that contains Intern POR, related to StudExp and StudentProfile for convinience"""
+    """ Model that contains POR, related to StudExp and StudentProfiloe for convinience"""
     Exp = models.ForeignKey(StudentExp)
     Profile = models.ForeignKey(StudentProfile)
     Position = models.CharField(max_length=100)
     Description = models.TextField()
 
 class StudentTrain(models.Model):
-     """Model that contains Training info, related to StudExp and StudentProfile for convinience"""
+    """Model that contains Training info, related to StudExp and StudentProfile for convinience"""
     Exp = models.ForeignKey(StudentExp)
     Profile = models.ForeignKey(StudentProfile)
     Program = models.CharField(max_length=100)
